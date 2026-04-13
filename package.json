@@ -1,0 +1,12 @@
+{
+  "name": "nomad-helper",
+  "version": "1.0.0",
+  "description": "Digital Nomad Visa Helper - AI-powered visa recommendation",
+  "main": "app.py",
+  "scripts": {
+    "start": "streamlit run app.py"
+  },
+  "keywords": ["streamlit", "visa", "digital-nomad"],
+  "author": "AI Assistant",
+  "license": "MIT"
+}
