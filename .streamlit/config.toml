@@ -1,6 +1,6 @@
 [server]
 headless = true
-port = 8501
 enableCORS = false
-[app]
-name: 数字游民签证助手
+
+[deprecation]
+showfileUploaderEncoding = false
