@@ -2,6 +2,15 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
+# 错误处理
+try:
+    import pandas as pd
+except ImportError:
+    import sys
+    sys.path.append('/home/appuser')
+    import pandas as pd
+
+
 # 设置页面配置
 st.set_page_config(
     page_title="数字游民签证助手",
