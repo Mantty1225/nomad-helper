@@ -102,18 +102,67 @@ def calculate_match(user_profile):
             if country in ["泰国", "墨西哥"]:
                 score += 15
         
-        # 偏好匹配
+        # 偏好匹配 - 多偏好加权
         preference = user_profile.get("preference", "")
+        custom_preference = user_profile.get("custom_preference", "")
+        
+        # 基础偏好匹配
         if "海滩" in preference and country in ["泰国", "克罗地亚"]:
-            score += 10
+            score += 8
         if "城市" in preference and country in ["葡萄牙", "西班牙"]:
-            score += 10
+            score += 8
         if "低成本" in preference and country in ["泰国", "墨西哥", "克罗地亚"]:
             score += 10
         if "安全" in preference and country in ["葡萄牙", "克罗地亚"]:
-            score += 10
-        if "网络" in preference and country in ["泰国", "葡萄牙"]:
-            score += 10
+            score += 8
+        if "网络好" in preference and country in ["泰国", "葡萄牙"]:
+            score += 8
+        if "气候温和" in preference and country in ["葡萄牙", "西班牙", "克罗地亚"]:
+            score += 6
+        if "华人社区" in preference and country in ["泰国"]:
+            score += 8
+        if "英语普及" in preference and country in ["葡萄牙", "克罗地亚"]:
+            score += 6
+        if "教育资源" in preference and country in ["葡萄牙", "西班牙"]:
+            score += 6
+        if "医疗水平" in preference and country in ["葡萄牙", "西班牙", "泰国"]:
+            score += 6
+        if "美食丰富" in preference and country in ["泰国", "墨西哥", "西班牙"]:
+            score += 6
+        if "文化丰富" in preference and country in ["西班牙", "墨西哥", "葡萄牙"]:
+            score += 6
+        if "交通便利" in preference and country in ["葡萄牙", "西班牙"]:
+            score += 6
+        if "自然风光" in preference and country in ["克罗地亚", "泰国"]:
+            score += 6
+        if "夜生活" in preference and country in ["泰国", "墨西哥", "西班牙"]:
+            score += 5
+        if "购物方便" in preference and country in ["泰国", "葡萄牙", "西班牙"]:
+            score += 5
+        if "运动设施" in preference and country in ["泰国", "克罗地亚", "西班牙"]:
+            score += 5
+        
+        # 自定义偏好AI分析（简化版）
+        if custom_preference:
+            custom_pref_lower = custom_preference.lower()
+            
+            # 关键词匹配
+            if any(word in custom_pref_lower for word in ['滑雪', '雪山', '冬季运动']) and country in ["克罗地亚"]:
+                score += 7
+            if any(word in custom_pref_lower for word in ['瑜伽', '冥想', '静心']) and country in ["泰国", "葡萄牙", "克罗地亚"]:
+                score += 6
+            if any(word in custom_pref_lower for word in ['潜水', '冲浪', '海岛']) and country in ["泰国", "克罗地亚"]:
+                score += 7
+            if any(word in custom_pref_lower for word in ['学校', '教育', '孩子']) and country in ["葡萄牙", "西班牙"]:
+                score += 8
+            if any(word in custom_pref_lower for word in ['创业', '商业', '投资']) and country in ["葡萄牙", "泰国", "墨西哥"]:
+                score += 6
+            if any(word in custom_pref_lower for word in ['艺术', '设计', '创意']) and country in ["西班牙", "葡萄牙", "墨西哥"]:
+                score += 6
+            if any(word in custom_pref_lower for word in ['安静', '宁静', '人少']) and country in ["克罗地亚", "泰国"]:
+                score += 6
+            if any(word in custom_pref_lower for word in ['热闹', '繁华', '社交']) and country in ["泰国", "墨西哥", "西班牙"]:
+                score += 6
         
         # 家庭情况
         family = user_profile.get("family", "单身")
@@ -123,11 +172,41 @@ def calculate_match(user_profile):
         elif family == "情侣":
             if country in ["葡萄牙", "西班牙"]:
                 score += 5
+        elif family == "带娃":
+            if country in ["葡萄牙", "西班牙", "泰国"]:
+                score += 8  # 带娃家庭权重更高
         
-        # 职业匹配
+        # 职业匹配 - 支持自定义职业
         job = user_profile.get("job", "")
+        custom_job = user_profile.get("custom_job", "")
+        
+        # 标准职业匹配
         if "程序员" in job or "设计师" in job:
             if country in ["泰国", "葡萄牙", "克罗地亚"]:
+                score += 5
+        if "自媒体" in job:
+            if country in ["泰国", "墨西哥", "西班牙"]:
+                score += 6
+        if "咨询顾问" in job:
+            if country in ["葡萄牙", "西班牙", "克罗地亚"]:
+                score += 5
+        
+        # 自定义职业AI分析（简化版）
+        if custom_job:
+            job_lower = custom_job.lower()
+            
+            # 关键词匹配
+            if any(word in job_lower for word in ['写作', '作家', '作者', '翻译']) and country in ["泰国", "墨西哥", "葡萄牙"]:
+                score += 6
+            if any(word in job_lower for word in ['教育', '教学', '老师', '在线课程']) and country in ["泰国", "葡萄牙", "西班牙"]:
+                score += 6
+            if any(word in job_lower for word in ['营销', '推广', '社交媒体', '电商']) and country in ["泰国", "墨西哥", "西班牙"]:
+                score += 6
+            if any(word in job_lower for word in ['艺术', '设计', '创意', '摄影']) and country in ["西班牙", "葡萄牙", "墨西哥"]:
+                score += 6
+            if any(word in job_lower for word in ['技术', '开发', '编程', '软件']) and country in ["泰国", "葡萄牙", "克罗地亚"]:
+                score += 5
+            if any(word in job_lower for word in ['金融', '交易', '投资']) and country in ["葡萄牙", "西班牙", "克罗地亚"]:
                 score += 5
         
         data["匹配度"] = min(score, 100)
@@ -155,6 +234,14 @@ def main():
                 ["程序员", "设计师", "自媒体", "咨询顾问", "其他"]
             )
             
+            # 如果选择了"其他"，显示自定义输入框
+            custom_job = ""
+            if job == "其他":
+                custom_job = st.text_input(
+                    "请描述您的职业",
+                    placeholder="例如：作家、翻译、在线教育、数字营销等..."
+                )
+            
             monthly_income = st.number_input(
                 "月收入（人民币）",
                 min_value=0,
@@ -170,10 +257,24 @@ def main():
             
             preference = st.multiselect(
                 "偏好（可多选）",
-                ["海滩", "城市", "低成本", "安全", "网络好"]
+                [
+                    "海滩", "城市", "低成本", "安全", "网络好",
+                    "气候温和", "华人社区", "英语普及", "教育资源", 
+                    "医疗水平", "美食丰富", "文化丰富", "交通便利",
+                    "自然风光", "夜生活", "购物方便", "运动设施", "其他"
+                ]
             )
             
-            family = st.selectbox(
+                        
+            # 如果选择了"其他"，显示自定义输入框
+            custom_preference = ""
+            if "其他" in preference:
+                custom_preference = st.text_area(
+                    "请描述您的其他偏好（可选）",
+                    placeholder="例如：喜欢滑雪、需要华人学校、重视瑜伽馆等...",
+                    height=100
+                )
+family = st.selectbox(
                 "家庭情况",
                 ["单身", "情侣", "带娃"]
             )
@@ -187,9 +288,11 @@ def main():
             # 准备用户数据
             user_profile = {
                 "job": job,
+                "custom_job": custom_job,
                 "monthly_income": monthly_income,
                 "continent": continent,
                 "preference": ",".join(preference),
+                "custom_preference": custom_preference,
                 "family": family
             }
             
@@ -238,7 +341,18 @@ def main():
             
             # 显示用户输入摘要
             with st.expander("📊 查看您的输入信息"):
-                st.json(user_profile)
+                # 显示职业信息（包含自定义职业）
+                job_display = user_profile["job"]
+                if user_profile.get("custom_job"):
+                    job_display = f"{user_profile['job']}（自定义：{user_profile['custom_job']}）"
+                
+                st.markdown(f"**职业：** {job_display}")
+                st.markdown(f"**月收入：** {user_profile['monthly_income']} 人民币")
+                st.markdown(f"**目标大洲：** {user_profile['continent']}")
+                st.markdown(f"**偏好：** {user_profile['preference']}")
+                if user_profile.get("custom_preference"):
+                    st.markdown(f"**自定义偏好：** {user_profile['custom_preference']}")
+                st.markdown(f"**家庭情况：** {user_profile['family']}")
         
         else:
             st.info("👈 请在左侧填写信息，获取个性化推荐")
