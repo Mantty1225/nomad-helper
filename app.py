@@ -274,7 +274,8 @@ def main():
                     placeholder="例如：喜欢滑雪、需要华人学校、重视瑜伽馆等...",
                     height=100
                 )
-family = st.selectbox(
+            
+            family = st.selectbox(
                 "家庭情况",
                 ["单身", "情侣", "带娃"]
             )
